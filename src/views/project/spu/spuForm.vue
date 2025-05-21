@@ -69,7 +69,7 @@
         </el-form-item>
 
         <el-form-item>
-            <el-button :disabled="!spuSaleAttrList.length > 0" type="primary" size="default"
+            <el-button :disabled="spuSaleAttrList.length === 0" type="primary" size="default"
                 @click="save">保存</el-button>
             <el-button type="primary" size="default" @click="cancel">取消</el-button>
         </el-form-item>
@@ -84,7 +84,7 @@ import type { SpuData } from '@/api/project/spu/type';
 import { reqAddOrUpdateSpu, reqAllTrademark, reqSpuImageList, reqSpuSaleAttrList, reqAllSaleAttr } from '@/api/project/spu'
 // 引入 UploadUserFile 类型
 import type { UploadUserFile } from 'element-plus/lib/components/index.js';
-import type { SaleAttrName, SpuTrademark, AllTrademark, SpuImage, SpuHasImage, SpuSaleAttrResponse, SpuSaleAttr, SaleAttrNameResponse } from '@/api/project/spu/type';
+import type { SpuSaleAttrValue,SaleAttrName, SpuTrademark, AllTrademark, SpuImage, SpuHasImage, SpuSaleAttrResponse, SpuSaleAttr, SaleAttrNameResponse } from '@/api/project/spu/type';
 import { ElMessage } from 'element-plus'
 
 let $emit = defineEmits(['changeScene']);
@@ -192,32 +192,33 @@ const toEdit = (row: SpuSaleAttr) => {
 }
 
 const toLook = (row: SpuSaleAttr) => {
-    if (row.saleAttrValue.trim() === '') {
-        ElMessage.error('属性值不能为空')
+  const value = row.saleAttrValue?.trim(); // 使用可选链防止 undefined
+
+    if (!value) {
+        ElMessage.error('属性值不能为空');
         row.saleAttrValue = '';
-        return
+        return;
     }
 
-    row.spuSaleAttrValueList.find(item => {
-        if (item.saleAttrValueName === row.saleAttrValue) {
-            ElMessage.error('属性值不能重复')
-            row.saleAttrValue = '';
-            return;
-        }
-    })
+    const isExist = row.spuSaleAttrValueList.some(item => item.saleAttrValueName === value);
+    if (isExist) {
+        ElMessage.error('属性值不能重复');
+        row.saleAttrValue = '';
+        return;
+    }
 
     row.spuSaleAttrValueList.push({
         baseSaleAttrId: row.baseSaleAttrId,
-        saleAttrValueName: row.saleAttrValue,
+        saleAttrValueName: value, // 确保是字符串
         saleAttrName: row.saleAttrName
-    })
+    });
 
     row.saleAttrValue = '';
-    row.flag = false
+    row.flag = false;
 }
 
 const save = async () => {
-    SpuParams.value.spuImageList = imageList.value.map(item => {
+    SpuParams.value.spuImageList = imageList.value.map((item: any) => {
         return {
             imageName: item.name,
             imageUrl: (item.response && item.response.data.imageUrl) || item.imageUrl,
