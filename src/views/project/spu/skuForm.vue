@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import type { SpuData } from '@/api/project/spu/type';
 import { getAttrList } from '@/api/project/attr';
-import { addSku,reqSpuImageList, reqSpuSaleAttrList } from '@/api/project/spu';
+import { addSku, reqSpuImageList, reqSpuSaleAttrList } from '@/api/project/spu';
 import type { SkuData } from '@/api/project/spu/type';
 import { ref, reactive } from 'vue';
 import { ElMessage } from 'element-plus'
@@ -83,6 +83,19 @@ let table = ref<any>()
 
 
 const initSkuData = async (c1Id: number | string, c2Id: number | string, row: SpuData) => {
+  //清空sku数据
+  Object.assign(skuParams, {
+    spuId: "",
+    price: "",
+    weight: "",
+    skuName: "",
+    skuDesc: "",
+    skuDefaultImg: "",
+    skuAttrValueList: [],
+    skuSaleAttrValueList: [],
+    skuImageList: [],
+  })
+
   //收集数据
   skuParams.spuId = row.id ?? ''; // 使用空值合并运算符处理 undefined
 
@@ -97,6 +110,8 @@ const initSkuData = async (c1Id: number | string, c2Id: number | string, row: Sp
     let result3 = await reqSpuSaleAttrList(row.id);
     saleArr.value = result3.data;
   }
+
+
 }
 
 const handler = (row: any) => {
@@ -131,6 +146,7 @@ const save = async () => {
   let result = await addSku(skuParams);
   if (result.code === 200) {
     ElMessage.success('添加成功')
+
     $emit('changeScene', { flag: 0, params: 'update' })
   } else {
     ElMessage.error('添加失败')
