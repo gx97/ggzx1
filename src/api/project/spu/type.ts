@@ -136,3 +136,8 @@ export interface SkuData {
   skuSaleAttrValueList: SkuSaleAttrValue[];
   skuImageList: SkuImage[];
 }
+
+//获取sku信息ts
+export interface SkuInfoData extends responseData {
+  data: SkuData[]
+}

@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type { SkuData,SpuData, SpuResponseData, AllTrademark, SpuHasImage, SpuSaleAttrResponse, SaleAttrNameResponse } from './type'
+import type {SkuInfoData, SkuData,SpuData, SpuResponseData, AllTrademark, SpuHasImage, SpuSaleAttrResponse, SaleAttrNameResponse } from './type'
 
 enum Api {
     // 获取spu数据
@@ -18,6 +18,10 @@ enum Api {
     UPDATE_SPU_URL = '/product/updateSpuInfo',
     //追加SKU地址
     ADDSKU_URL = '/product/saveSkuInfo',
+    //获取SKU列表
+    FIND_SKU_URL = '/product/findBySpuId/',
+    //删除SPU
+    DELETE_SPU_URL = '/product/deleteSpu/'
 
 }
 
@@ -40,3 +44,7 @@ export const reqAddOrUpdateSpu = (data: SpuData) => {
 }
 
 export const addSku = (data: SkuData) => request.post<SkuData, any>(Api.ADDSKU_URL, data);
+
+export const reqFindSkuList = (spuId: number) => request.get<number, SkuInfoData>(Api.FIND_SKU_URL + spuId);
+
+export const reqDeleteSpu = (spuId: number) => request.delete<number, any>(Api.DELETE_SPU_URL + spuId);
