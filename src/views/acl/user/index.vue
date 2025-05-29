@@ -73,9 +73,7 @@
       <el-form-item label="职位列表">
         <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">全选</el-checkbox>
         <el-checkbox-group v-model="checkedRoles" @change="handleCheckedRolesChange">
-          <el-checkbox v-for="(role, index) in allRole" :key="role.id" :label="role.id">{{
-            role.roleName
-          }}</el-checkbox>
+          <el-checkbox v-for="(role, index) in allRole" :key="role.id" :label="role.id"> {{ role.roleName }}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
 
@@ -96,7 +94,7 @@ import { getUserRoleList, doAssignRole, reqBatchDeleteUser, reqDeleteUser, reqAd
 import type { Role, UserRolesResponse, AssignRoleParams, AddUserParams, UserListResponseData, User } from "@/api/acl/user/type";
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
-import { ca } from "element-plus/es/locales.mjs";
+
 
 
 let pageNo = ref<number>(1);
