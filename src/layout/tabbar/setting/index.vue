@@ -5,7 +5,8 @@
   <el-popover placement="bottom" title="主题设置" :width="300" trigger="hover">
     <el-form label-position="right" label-width="100px">
       <el-form-item label="主题颜色">
-        <el-color-picker v-model="color" show-alpha :predefine="predefineColors" />
+        <el-color-picker @change="setColor" :teleported="false" v-model="color" show-alpha
+          :predefine="predefineColors" />
       </el-form-item>
       <el-form-item label="暗黑模式">
         <el-switch @change="toggleDark" active-text="开启" inactive-text="关闭" v-model="dark" inline-prompt
@@ -83,12 +84,17 @@ const logout = () => {
 }
 
 const toggleDark = () => {
-  let html = document.documentElement;
+  const html = document.documentElement;
   if (html.classList.contains('dark')) {
     html.classList.remove('dark');
   } else {
     html.classList.add('dark');
   }
+}
+
+const setColor = () => {
+  const html = document.documentElement;
+  html.style.setProperty('--el-color-primary', color.value);
 }
 
 </script>
